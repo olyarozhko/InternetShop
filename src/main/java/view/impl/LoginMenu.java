@@ -52,7 +52,7 @@ public class LoginMenu implements Menu {
         if (userService.login(login, password)) {
             new ProductMenu().show();
         } else {
-            System.out.println("Wrong username/pasword");
+            System.out.println("Wrong username/password");
             show();
         }
     }
