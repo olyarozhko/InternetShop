@@ -16,7 +16,7 @@ public class LoginMenu implements Menu {
     @Override
     public void show() {
         showItems(items);
-       /* System.out.println("0. Exit"); */
+        /*  System.out.println("0. Exit"); */
 
         scanner = new Scanner(System.in);
 
@@ -30,9 +30,9 @@ public class LoginMenu implements Menu {
                 case 2:
                     registerSubMenu(scanner);
                     break;
-                /*case 0:
+                case 0:
                     exit();
-                    break;*/
+                    break;
             }
         }
     }
@@ -66,13 +66,6 @@ public class LoginMenu implements Menu {
                 new LoginMenu().show();
                 break;
         }
-
-        if (userService.login(login, password)) {
-            new ProductMenu().show();
-        } else {
-            System.out.println("Wrong username/password");
-            show();
-        }
     }
 
     private void registerSubMenu(Scanner scanner) {
@@ -89,8 +82,13 @@ public class LoginMenu implements Menu {
         int yesNo = scanner.nextInt();
         switch (yesNo) {
             case 1:
-                System.out.println("Account created!");
-                new LoginMenu().show();
+                if (userService.login(login, password)) {
+                    System.out.println("Account already exists!");
+                    new LoginMenu().show();
+                } else {
+                    System.out.println("Account created!");
+                    new LoginMenu().show();
+                }
                 break;
             case 2:
                 System.out.println("Account not created!");

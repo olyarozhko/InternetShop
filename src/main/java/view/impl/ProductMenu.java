@@ -6,7 +6,7 @@ public class ProductMenu implements Menu {
 
     @Override
     public void show() {
-
+        System.out.println("Products...");
     }
 
     @Override
