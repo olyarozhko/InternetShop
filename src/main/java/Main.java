@@ -1,3 +1,4 @@
+import dao.UserDaoImpl;
 import view.impl.LoginMenu;
 
 public class Main {
@@ -5,5 +6,6 @@ public class Main {
         new LoginMenu().show();
     }
     LoginMenu loginMenu = new LoginMenu();
+
 
 }
