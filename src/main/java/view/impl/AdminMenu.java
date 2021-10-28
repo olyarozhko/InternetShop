@@ -21,20 +21,8 @@ public class AdminMenu implements Menu {
                 case 1 -> new UserListMenu().show();
                 case 2 -> new OrderMenu().show();
                 case 3 -> new ProductMenu().show();
-                case 4 -> new LoginMenu().show();
+                case 4 -> logout();
                 case 0 -> exit();
-            }
-        }
-    }
-
-    @Override
-    public void exit() {
-        System.out.println("Are you sure, you want to leave the Shop? \n1. yes \n2. no");
-        try (Scanner scanner = new Scanner(System.in)) {
-            int answer = scanner.nextInt();
-            switch (answer) {
-                case 1 -> System.exit(0);
-                case 2 -> show();
             }
         }
     }
