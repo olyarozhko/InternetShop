@@ -11,7 +11,7 @@ public interface UserDao {
 
     void save(User user);
 
-    void update(User user);
+    void isLocked(String username, boolean isLocked);
 
     User getByName(String username);
 

@@ -19,7 +19,7 @@ public class UserDaoImpl implements UserDao {
                     directory.mkdir();
                 }
                 userdbFile.createNewFile();
-            } catch (IOException e){
+            } catch (IOException e) {
                 System.out.println("Error occurred while creating directory or file");
             }
         }
@@ -30,16 +30,30 @@ public class UserDaoImpl implements UserDao {
             bufferedWriter.write(user.toString());
             bufferedWriter.close();
 
-        }catch (IOException e){
+        } catch (IOException e) {
             System.out.println("Error occurred while saving user");
         }
     }
 
     @Override
-    public void update(User user) {
-
-
+    public void isLocked(String username, boolean isLocked) {
+        try {
+            BufferedReader userdbFile = new BufferedReader(new FileReader("resources/userdbFile.csv"));
+            String line;
+            String input = "";
+            while ((line = userdbFile.readLine()) != null) input += line + '\n';
+            if (Boolean.parseBoolean(String.valueOf(!isLocked))) {
+                input = input.replace(username + false, username + true);
+            } else if (Boolean.parseBoolean(String.valueOf(isLocked == true))) {
+                input = input.replace(username + true, username + false);
+            }
+            FileOutputStream userdbFile2 = new FileOutputStream("resources/userdbFile.csv");
+            userdbFile2.write(input.getBytes());
+        } catch (IOException e) {
+            System.out.println("Error occurred while reading file");
+        }
     }
+
 
     @Override
     public User getByName(String username) {
