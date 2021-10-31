@@ -13,6 +13,18 @@ public class Response<T> {
         this.errorMsg = errorMsg;
     }
 
+    public T getResult() {
+        return result;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public String getErrorMsg() {
+        return errorMsg;
+    }
+
     @Override
     public String toString() {
         return "Response{" +
