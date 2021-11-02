@@ -1,7 +1,6 @@
 package dao;
 
 import model.Product;
-import model.User;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
