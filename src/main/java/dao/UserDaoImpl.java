@@ -3,13 +3,17 @@ package dao;
 import model.User;
 
 import java.io.*;
-import java.util.List;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 
 
 public class UserDaoImpl implements UserDao {
 
+    static ArrayList<User> userdb = new ArrayList<>();
+
+
     @Override
-    public void save(User user) {
+    public void save(ArrayList<User> userdb) {
         File userdbFile = new File("resources/userdbFile.csv");
 
         if (!userdbFile.exists()) {
@@ -23,46 +27,67 @@ public class UserDaoImpl implements UserDao {
                 System.out.println("Error occurred while creating directory or file");
             }
         }
-        try {
-            FileWriter userdbWriter;
-            userdbWriter = new FileWriter(userdbFile.getAbsoluteFile(), true);
-            BufferedWriter bufferedWriter = new BufferedWriter(userdbWriter);
-            bufferedWriter.write(user.toString());
-            bufferedWriter.close();
 
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("resources/userdbFile.csv"), StandardCharsets.UTF_8))) {
+            for (User user : userdb) {
+                String CSV_SEPARATOR = ";";
+                String oneLine = (user.getUserId() < 0 ? "" : user.getUserId()) +
+                        CSV_SEPARATOR +
+                        (user.getUsername().trim().length() == 0 ? "" : user.getUsername()) +
+                        CSV_SEPARATOR +
+                        (user.getPassword().trim().length() == 0 ? "" : user.getPassword()) +
+                        CSV_SEPARATOR +
+                        (user.isLocked() ? "Yes" : "No");
+                bw.write(oneLine);
+                bw.newLine();
+            }
+            bw.flush();
         } catch (IOException e) {
             System.out.println("Error occurred while saving user");
         }
     }
 
     @Override
-    public void isLocked(String username, boolean isLocked) {
-        try {
-            BufferedReader userdbFile = new BufferedReader(new FileReader("resources/userdbFile.csv"));
-            String line;
-            String input = "";
-            while ((line = userdbFile.readLine()) != null) input += line + '\n';
-            if (Boolean.parseBoolean(String.valueOf(!isLocked))) {
-                input = input.replace(username + false, username + true);
-            } else if (Boolean.parseBoolean(String.valueOf(isLocked == true))) {
-                input = input.replace(username + true, username + false);
+    public void addUser(String username, String password) {
+
+        userdb.add(new User(username, password));
+        save(userdb);
+    }
+
+    @Override
+    public void isLocked(Integer userId, boolean isLocked) {
+
+        for (User user : userdb) {
+            if (user.getUserId().equals(userId)) {
+                user.setLocked(isLocked);
+                save(userdb);
             }
-            FileOutputStream userdbFile2 = new FileOutputStream("resources/userdbFile.csv");
-            userdbFile2.write(input.getBytes());
-        } catch (IOException e) {
-            System.out.println("Error occurred while reading file");
         }
     }
 
-
     @Override
     public User getByName(String username) {
+        for (User user : userdb) {
+            if (user.getUsername().equals(username)) {
+                return user;
+            }
+        }
         return null;
     }
 
     @Override
-    public List<User> getAll() {
-        return null;
+    public ArrayList<User> getAll() {
+        return (userdb);
     }
 
+    @Override
+    public User getById(Integer userId) {
+
+        for (User user : userdb) {
+            if (user.getUserId().equals(userId)) {
+                return user;
+            }
+        }
+        return null;
+    }
 }
