@@ -1,6 +1,9 @@
 package service;
 
 
+import model.Response;
+import model.User;
+
 public interface UserService {
 
     /**
@@ -10,8 +13,7 @@ public interface UserService {
      * @param password user password
      * @return outcome of login - success or not
      */
-    boolean login(String username, String password);
+    Response<User> login(String username, String password);
 
 
-    boolean adminRights(String username);
 }
