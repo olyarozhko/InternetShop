@@ -4,20 +4,55 @@ import model.Product;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
-public class ProductDaoImpl implements ProductDao{
-    static ArrayList<Product> productdb = new ArrayList<>();
+public class ProductDaoImpl implements ProductDao {
+
+    private static List<Product> productdb = new ArrayList<>();
 
     @Override
-    public void addProduct(String productName, String firm, Integer price, Integer maxLoad, String loadType) {
+    public void readFromCsv(String filename) {
+        Path pathToFile = Paths.get(filename);
 
-        productdb.add(new Product(productName, firm, price, maxLoad, loadType));
+        try (BufferedReader br = Files.newBufferedReader(pathToFile, StandardCharsets.UTF_8)) {
+            String line = br.readLine();
+            while (line != null) {
+                String[] attributes = line.split(",");
+                Product product = createProductForReadingFromCsv(attributes);
+                addProduct(product);
+                line = br.readLine();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private Product createProductForReadingFromCsv(String[] metadata) {
+
+        String productName = metadata[1];
+        String firm = metadata[2];
+        Integer price = Integer.parseInt(metadata[3]);
+        Integer maxLoad = Integer.parseInt(metadata[4]);
+        String loadType = metadata[5];
+
+
+        return new Product(productName, firm, price,maxLoad,loadType);
+    }
+
+    @Override
+    public void addProduct(Product productNew) {
+
+        productdb.add(productNew);
         save(productdb);
     }
 
     @Override
-    public void save(ArrayList<Product> productdb) {
+    public void save(List<Product> productdb) {
         File productdbFile = new File("resources/productdbFile.csv");
 
         if (!productdbFile.exists()) {
@@ -54,7 +89,6 @@ public class ProductDaoImpl implements ProductDao{
             System.out.println("Error occurred while saving user");
         }
     }
-    }
 
     @Override
     public Product getByName(String productName) {
@@ -77,19 +111,17 @@ public class ProductDaoImpl implements ProductDao{
     }
 
     @Override
-    public ArrayList<Product> getAll() {
+    public List<Product> getAll() {
         return (productdb);
     }
 
     @Override
-    public void editProduct(String productName, String firm, Integer price, Integer maxLoad, String loadType) {
+    public void editProduct(Integer productId, Product productNew) {
         for (Product product : productdb) {
-            if (product.getProductName().equals(productName)) {
-                product.setProductName(productName);
-                product.setFirm(firm);
-                product.setPrice(price);
-                product.setMaxLoad(maxLoad);
-                product.setLoadType(loadType);
+            if (product.getProductId().equals(productId)) {
+                int index = productdb.indexOf(product);
+                productdb.set(index,productNew);
+                save(productdb);
             }
         }
     }

@@ -2,7 +2,6 @@ package dao;
 
 import model.User;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,16 +9,18 @@ import java.util.List;
  */
 public interface UserDao {
 
-    void addUser(String username, String password);
+    void readFromCsv(String filename);
 
-    void save(ArrayList<User> userdb);
+    void addUser(User user);
 
-    void isLocked(Integer userId, boolean isLocked);
+    void save(List<User> userdb);
+
+    void lockUser(Integer userId, boolean isLocked);
 
     User getByName(String username);
 
     User getById(Integer userId);
 
-    ArrayList<User> getAll();
+    List<User> getAll();
 
 }

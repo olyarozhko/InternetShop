@@ -4,16 +4,46 @@ import model.User;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class UserDaoImpl implements UserDao {
 
-    static ArrayList<User> userdb = new ArrayList<>();
-
+    private static List<User> userdb = new ArrayList<>();
 
     @Override
-    public void save(ArrayList<User> userdb) {
+    public void readFromCsv(String filename) {
+        Path pathToFile = Paths.get(filename);
+
+        try (BufferedReader br = Files.newBufferedReader(pathToFile, StandardCharsets.UTF_8)) {
+            String line = br.readLine();
+            while (line != null) {
+                String[] attributes = line.split(",");
+                User user = createUserForReadingFromCsv(attributes);
+                addUser(user);
+                line = br.readLine();
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private User createUserForReadingFromCsv(String[] metadata) {
+
+        String username = metadata[1];
+        String password = metadata[2];
+        boolean isLocked = Boolean.parseBoolean(metadata[3]);
+
+        return new User(username, password, isLocked);
+    }
+
+    @Override
+    public void save(List<User> userdb) {
         File userdbFile = new File("resources/userdbFile.csv");
 
         if (!userdbFile.exists()) {
@@ -48,14 +78,14 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void addUser(String username, String password) {
+    public void addUser(User userNew) {
 
-        userdb.add(new User(username, password));
+        userdb.add(userNew);
         save(userdb);
     }
 
     @Override
-    public void isLocked(Integer userId, boolean isLocked) {
+    public void lockUser(Integer userId, boolean isLocked) {
 
         for (User user : userdb) {
             if (user.getUserId().equals(userId)) {
@@ -76,7 +106,7 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public ArrayList<User> getAll() {
+    public List<User> getAll() {
         return (userdb);
     }
 

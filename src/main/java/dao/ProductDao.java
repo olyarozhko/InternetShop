@@ -2,19 +2,21 @@ package dao;
 
 import model.Product;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface ProductDao {
 
-    void addProduct(String productName, String firm, Integer price, Integer maxLoad, String loadType);
+    void readFromCsv(String filename);
 
-    void save(ArrayList<Product> productdb);
+    void addProduct(Product productNew);
+
+    void save(List<Product> productdb);
 
     Product getByName(String productName);
 
     Product getById(Integer productId);
 
-    ArrayList<Product> getAll();
+    List<Product> getAll();
 
-    void editProduct(String productName, String firm, Integer price, Integer maxLoad, String loadType);
+    void editProduct(Integer productId, Product productNew);
 }
