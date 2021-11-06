@@ -67,13 +67,17 @@ public class Order {
 
     @Override
     public String toString() {
-        return '{' +
-                "id=" + id +
+        return  "ID=" + id +
                 ", orderOwner='" + orderOwner + '\'' +
                 ", state=" + state +
-                ", productList=" + productList +
-                ", SUM=" + sum +
-                '}';
+                ", productList:" +
+                "\n" +
+                            "\n" + productList + "," +
+                "\n" +
+                "\n--------------" +
+                "\n\t SUM=" + sum +
+                "\n"+
+                "\n";
     }
 
     @Override
