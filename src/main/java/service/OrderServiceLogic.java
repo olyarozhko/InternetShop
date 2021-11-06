@@ -8,21 +8,21 @@ import model.Response;
 import java.util.List;
 
 public class OrderServiceLogic implements OrderService {
+    OrderDaoImpl orderDao;
+
     @Override
     public Response<Order> createOrder(String username, List<Product> productList) {
-        var orderNew = new Order(username, productList);
-        var orderDao = new OrderDaoImpl();
 
-        if (productList.size() == 0) {
+        if (productList == null) {
             return new Response<>(null, false, "Product list is blank.");
         }
+        var orderNew = new Order(username, productList);
         orderDao.save(orderNew);
         return new Response<>(orderNew, true, null);
     }
 
     @Override
     public Response<Order> confirmOrder(Integer orderId) {
-        var orderDao = new OrderDaoImpl();
 
         if (!orderIdChecking(orderId).isSuccess()) {
             return orderIdChecking(orderId);
@@ -38,8 +38,6 @@ public class OrderServiceLogic implements OrderService {
 
     @Override
     public Response<Order> cancelOrder(Integer orderId) {
-        var orderDao = new OrderDaoImpl();
-
         if (!orderIdChecking(orderId).isSuccess()) {
             return orderIdChecking(orderId);
         }
@@ -54,7 +52,6 @@ public class OrderServiceLogic implements OrderService {
 
     @Override
     public Response<Order> orderIdChecking(Integer orderId) {
-        var orderDao = new OrderDaoImpl();
 
         if (orderId == null) {
             return new Response<>(null, false, "Order ID can't be blank.");
