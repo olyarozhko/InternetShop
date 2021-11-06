@@ -2,7 +2,6 @@ package service;
 
 
 public interface UserService {
-
     /**
      * Used to login a user
      *

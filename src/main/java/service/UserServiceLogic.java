@@ -1,5 +1,10 @@
 package service;
 
+import dao.UserDao;
+import dao.UserDaoImpl;
+
+import java.util.List;
+
 public class UserServiceLogic implements UserService{
     /**
      * Used to login a user

@@ -11,7 +11,7 @@ public class User {
     private String phoneNumber;
     private boolean isAdmin;
 
-    User (String username, String password){
+    public User(String username, String password){
         this.username = username;
         this.password = password;
         this.isAdmin = new UserServiceLogic().adminRights(username);
