@@ -14,8 +14,8 @@ public class ProductDaoImpl implements ProductDao {
 
     private static List<Product> productdb = new ArrayList<>();
 
-    @Override
-    public void readFromCsv(String filename) {
+
+    public static void readFromCsv(String filename) {
         Path pathToFile = Paths.get(filename);
 
         try (BufferedReader br = Files.newBufferedReader(pathToFile, StandardCharsets.UTF_8)) {
@@ -32,7 +32,7 @@ public class ProductDaoImpl implements ProductDao {
         }
     }
 
-    private Product createProductForReadingFromCsv(String[] metadata) {
+    private static Product createProductForReadingFromCsv(String[] metadata) {
 
         String productName = metadata[1];
         String firm = metadata[2];
@@ -44,15 +44,14 @@ public class ProductDaoImpl implements ProductDao {
         return new Product(productName, firm, price,maxLoad,loadType);
     }
 
-    @Override
-    public void addProduct(Product productNew) {
+
+    public static void addProduct(Product productNew) {
 
         productdb.add(productNew);
         save(productdb);
     }
 
-    @Override
-    public void save(List<Product> productdb) {
+    public static void save(List<Product> productdb) {
         File productdbFile = new File("resources/productdbFile.csv");
 
         if (!productdbFile.exists()) {
@@ -90,8 +89,8 @@ public class ProductDaoImpl implements ProductDao {
         }
     }
 
-    @Override
-    public Product getByName(String productName) {
+
+    public static Product getByName(String productName) {
         for (Product product : productdb) {
             if (product.getProductName().equals(productName)) {
                 return product;
@@ -100,8 +99,8 @@ public class ProductDaoImpl implements ProductDao {
         return null;
     }
 
-    @Override
-    public Product getById(Integer productId) {
+
+    public static Product getById(Integer productId) {
         for (Product product : productdb) {
             if (product.getProductId().equals(productId)) {
                 return product;
@@ -110,13 +109,13 @@ public class ProductDaoImpl implements ProductDao {
         return null;
     }
 
-    @Override
-    public List<Product> getAll() {
+
+    public static List<Product> getAll() {
         return (productdb);
     }
 
-    @Override
-    public void editProduct(Integer productId, Product productNew) {
+
+    public static void editProduct(Integer productId, Product productNew) {
         for (Product product : productdb) {
             if (product.getProductId().equals(productId)) {
                 int index = productdb.indexOf(product);

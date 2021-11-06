@@ -1,6 +1,5 @@
 package service;
 
-import dao.UserDaoImpl;
 import model.Response;
 import model.User;
 

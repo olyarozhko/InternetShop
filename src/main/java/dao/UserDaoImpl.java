@@ -11,12 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class UserDaoImpl implements UserDao {
+public class UserDaoImpl {
 
     private static List<User> userdb = new ArrayList<>();
 
-    @Override
-    public void readFromCsv(String filename) {
+    public static void readFromCsv(String filename) {
         Path pathToFile = Paths.get(filename);
 
         try (BufferedReader br = Files.newBufferedReader(pathToFile, StandardCharsets.UTF_8)) {
@@ -33,7 +32,7 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    private User createUserForReadingFromCsv(String[] metadata) {
+    private static User createUserForReadingFromCsv(String[] metadata) {
 
         String username = metadata[1];
         String password = metadata[2];
@@ -43,8 +42,8 @@ public class UserDaoImpl implements UserDao {
         return new User(username, password, isLocked, isAdmin);
     }
 
-    @Override
-    public void save(List<User> userdb) {
+
+    public static void save(List<User> userdb) {
         File userdbFile = new File("resources/userdbFile.csv");
 
         if (!userdbFile.exists()) {
@@ -78,15 +77,15 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    @Override
-    public void addUser(User userNew) {
+
+    public static void addUser(User userNew) {
 
         userdb.add(userNew);
         save(userdb);
     }
 
-    @Override
-    public void lockUser(Integer userId, boolean isLocked) {
+
+    public static void lockUser(Integer userId, boolean isLocked) {
 
         for (User user : userdb) {
             if (user.getUserId().equals(userId)) {
@@ -96,8 +95,8 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    @Override
-    public User getByName(String username) {
+
+    public static User getByName(String username) {
         for (User user : userdb) {
             if (user.getUsername().equals(username)) {
                 return user;
@@ -106,13 +105,13 @@ public class UserDaoImpl implements UserDao {
         return null;
     }
 
-    @Override
-    public List<User> getAll() {
+
+    public static List<User> getAll() {
         return (userdb);
     }
 
-    @Override
-    public User getById(Integer userId) {
+
+    public static User getById(Integer userId) {
 
         for (User user : userdb) {
             if (user.getUserId().equals(userId)) {

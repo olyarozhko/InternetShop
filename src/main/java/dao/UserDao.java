@@ -9,18 +9,4 @@ import java.util.List;
  */
 public interface UserDao {
 
-    void readFromCsv(String filename);
-
-    void addUser(User user);
-
-    void save(List<User> userdb);
-
-    void lockUser(Integer userId, boolean isLocked);
-
-    User getByName(String username);
-
-    User getById(Integer userId);
-
-    List<User> getAll();
-
 }
