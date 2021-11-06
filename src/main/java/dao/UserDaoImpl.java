@@ -38,8 +38,9 @@ public class UserDaoImpl implements UserDao {
         String username = metadata[1];
         String password = metadata[2];
         boolean isLocked = Boolean.parseBoolean(metadata[3]);
+        boolean isAdmin = Boolean.parseBoolean(metadata[4]);
 
-        return new User(username, password, isLocked);
+        return new User(username, password, isLocked, isAdmin);
     }
 
     @Override
