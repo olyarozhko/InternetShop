@@ -1,22 +1,24 @@
 package dao;
 
 import model.Order;
-import model.Product;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface OrderDao {
 
+    void readFromCsv(String filename);
 
-    void save(Order order);
+    void addOrder(Order orderNew);
 
-    void changeOrderStatus(Integer orderId, Order.Status status);
+    void save(List<Order> orderdb);
 
-    List<Order> getByUser(String username);
+    List<Integer> getByOrderOwner(String orderOwner);
 
     Order getById(Integer id);
 
-    List<Order> getAllOrders();
+    List<Order> getAll();
+
+    void changeOrderStatus(Integer Id, Order.Status state);
+
 
 }

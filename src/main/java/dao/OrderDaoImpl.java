@@ -1,6 +1,7 @@
 package dao;
 
-import model.User;
+import model.Order;
+import model.Product;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -9,11 +10,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+public class OrderDaoImpl implements OrderDao {
 
-public class UserDaoImpl implements UserDao {
+    private static List<Order> orderdb = new ArrayList<>();
 
-    private static List<User> userdb = new ArrayList<>();
 
     @Override
     public void readFromCsv(String filename) {
@@ -23,8 +25,8 @@ public class UserDaoImpl implements UserDao {
             String line = br.readLine();
             while (line != null) {
                 String[] attributes = line.split(",");
-                User user = createUserForReadingFromCsv(attributes);
-                addUser(user);
+                Order order = createOrderForReadingFromCsv(attributes);
+                addOrder(order);
                 line = br.readLine();
             }
 
@@ -33,41 +35,44 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
-    private User createUserForReadingFromCsv(String[] metadata) {
+    private Order createOrderForReadingFromCsv(String[] metadata) {
 
-        String username = metadata[1];
-        String password = metadata[2];
-        boolean isLocked = Boolean.parseBoolean(metadata[3]);
+        String orderOwner = metadata[1];
+        Integer productId = Integer.parseInt(metadata[2]);
 
-        return new User(username, password, isLocked);
+        return new Order(orderOwner, productId);
     }
 
     @Override
-    public void save(List<User> userdb) {
-        File userdbFile = new File("resources/userdbFile.csv");
+    public void addOrder(Order orderNew) {
+        orderdb.add(orderNew);
+        save(orderdb);
+    }
 
-        if (!userdbFile.exists()) {
+    @Override
+    public void save(List<Order> orderdb) {
+        File orderdbFile = new File("resources/orderdbFile.csv");
+
+        if (!orderdbFile.exists()) {
             try {
-                File directory = new File(userdbFile.getParent());
+                File directory = new File(orderdbFile.getParent());
                 if (!directory.exists()) {
                     directory.mkdir();
                 }
-                userdbFile.createNewFile();
+                orderdbFile.createNewFile();
             } catch (IOException e) {
                 System.out.println("Error occurred while creating directory or file");
             }
         }
 
-        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("resources/userdbFile.csv"), StandardCharsets.UTF_8))) {
-            for (User user : userdb) {
+        try (BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("resources/orderdbFile.csv"), StandardCharsets.UTF_8))) {
+            for (Order order : orderdb) {
                 String CSV_SEPARATOR = ";";
-                String oneLine = (user.getUserId() < 0 ? "" : user.getUserId()) +
+                String oneLine = (order.getId() < 0 ? "" : order.getId()) +
                         CSV_SEPARATOR +
-                        (user.getUsername().trim().length() == 0 ? "" : user.getUsername()) +
+                        (order.getOrderOwner().trim().length() == 0 ? "" : order.getOrderOwner()) +
                         CSV_SEPARATOR +
-                        (user.getPassword().trim().length() == 0 ? "" : user.getPassword()) +
-                        CSV_SEPARATOR +
-                        (user.isLocked() ? "Yes" : "No");
+                        (order.getState());
                 bw.write(oneLine);
                 bw.newLine();
             }
@@ -78,46 +83,36 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void addUser(User userNew) {
+    public List<Integer> getByOrderOwner(String orderOwner) {
 
-        userdb.add(userNew);
-        save(userdb);
+        List<Order> allOrderedProducts;
+        allOrderedProducts = orderdb.stream().filter(order -> order.getOrderOwner().equals(orderOwner))
+                .collect(Collectors.toList());
+        return allOrderedProducts.stream().map(Order::getProductId).collect(Collectors.toList());
     }
 
     @Override
-    public void lockUser(Integer userId, boolean isLocked) {
-
-        for (User user : userdb) {
-            if (user.getUserId().equals(userId)) {
-                user.setLocked(isLocked);
-                save(userdb);
-            }
-        }
-    }
-
-    @Override
-    public User getByName(String username) {
-        for (User user : userdb) {
-            if (user.getUsername().equals(username)) {
-                return user;
+    public Order getById(Integer id) {
+        for (Order order : orderdb) {
+            if (order.getId().equals(id)) {
+                return order;
             }
         }
         return null;
     }
 
     @Override
-    public List<User> getAll() {
-        return (userdb);
+    public List<Order> getAll() {
+        return (orderdb);
     }
 
     @Override
-    public User getById(Integer userId) {
-
-        for (User user : userdb) {
-            if (user.getUserId().equals(userId)) {
-                return user;
+    public void changeOrderStatus(Integer id, Order.Status state) {
+        for (Order order : orderdb) {
+            if (order.getId().equals(id)) {
+                order.setState(state);
+                save(orderdb);
             }
         }
-        return null;
     }
 }
