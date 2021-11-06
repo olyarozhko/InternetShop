@@ -1,5 +1,6 @@
 package view.impl;
 
+import dao.ProductDao;
 import dao.ProductDaoImpl;
 import model.Product;
 import service.ProductServiceLogic;
@@ -35,7 +36,7 @@ public class ProductMenu implements Menu {
 
     public void showProducts() {
         System.out.println("\n----- Product list----\n");
-        System.out.println(ProductDaoImpl.getAllProducts());
+        System.out.println(new ProductDaoImpl().getAll());
         System.out.println();
         System.out.println("Select one of the Options:\n");
         showItems(itemsProductList);

@@ -14,7 +14,7 @@ public class Product {
 
     enum LoadType {
         VERTICAL,
-        FRONTAL
+        FRONTAL;
     }
 
     public Product() {
@@ -78,8 +78,8 @@ public class Product {
         return maxLoad;
     }
 
-    public LoadType getLoadType() {
-        return loadType;
+    public String getLoadType() {
+        return loadType.toString();
     }
 
     public Integer getProductId() {
@@ -89,14 +89,14 @@ public class Product {
 
     @Override
     public String toString() {
-        return "{" +
+        return
                 "ID='" + productId + '\'' +
                 "productName='" + productName + '\'' +
                 ", firm='" + firm + '\'' +
                 ", price=" + price +
                 ", maxLoad=" + maxLoad +
                 ", LoadType='" + loadType + '\'' +
-                '}' + "\n";
+                "\n";
     }
 
     @Override
