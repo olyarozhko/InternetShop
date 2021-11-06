@@ -1,16 +1,19 @@
 package service;
 
 
+import model.Response;
+import model.User;
+
 public interface UserService {
-    /**
-     * Used to login a user
-     *
-     * @param username user name
-     * @param password user password
-     * @return outcome of login - success or not
-     */
-    boolean login(String username, String password);
 
+    Response<User> login(String username, String password);
 
-    boolean adminRights(String username);
+    Response<User> register(String username, String password, String firstName, String lastName, String phoneNumber,
+                            String email);
+
+    Response<User> userLock(Integer userId);
+
+    Response<User> userUnlock(Integer userId);
+
+    Response<User> userIdChecking(Integer userId);
 }
