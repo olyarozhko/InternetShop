@@ -82,12 +82,17 @@ public class OrderDaoImpl {
     }
 
 
-    public static List<Integer> getByOrderOwner(String orderOwner) {
+    public static List<Product> getByOrderOwner(String orderOwner) {
 
         List<Order> allOrderedProducts;
         allOrderedProducts = orderdb.stream().filter(order -> order.getOrderOwner().equals(orderOwner))
                 .collect(Collectors.toList());
-        return allOrderedProducts.stream().map(Order::getProductId).collect(Collectors.toList());
+        List<Integer> id = allOrderedProducts.stream().map(Order::getProductId).collect(Collectors.toList());
+        List<Product> productList = new ArrayList<>();
+        for (int i = 0; i < id.size(); i++) {
+
+            productList.add(ProductDaoImpl.getById(i));
+        }return productList;
     }
 
 
